@@ -7,10 +7,14 @@ const octokit = require('@octokit/rest')();
 /**
  * @param {String} owner Github owner username.
  * @param {String} repo Repository name.
- * @param {String} labels Comma separated labels.
+ * @param {String[]} labels Issue labels.
+ * @param {String} since Only issues updated at or after this time are returned.
+ * This is a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ.
+ * @param {String} [state='all'] Indicates the state of the issues to return.
+ * Can be either open, closed, or all.
  * @return {Promise<Object[]>}
  */
-const getAllIssues = async (owner, repo, labels = []) => {
+const getAllIssues = async (owner, repo, labels = [], since, state = 'all') => {
   debug(`retrieving issues for: "${owner}:${repo}", with labels: "${labels.join(', ')}"`);
   const issues = [];
 
@@ -18,7 +22,8 @@ const getAllIssues = async (owner, repo, labels = []) => {
     owner,
     repo,
     labels,
-    state: 'all',
+    state,
+    since,
   });
 
   issues.push(...response.data);
@@ -97,17 +102,20 @@ const getInfo = (issue) => {
  */
 const changelog = async (config) => {
   config = Object.assign({
-    GITHUB_TOKEN: Env.GITHUB_TOKEN,
-    GITHUB_OWNER: Env.GITHUB_OWNER,
-    GITHUB_PROJECT: Env.GITHUB_PROJECT,
-    ISSUE_LABELS: Env.ISSUE_LABELS,
+    token: Env.GITHUB_TOKEN,
+    owner: Env.GITHUB_OWNER,
+    project: Env.GITHUB_PROJECT,
+    labels: Env.ISSUE_LABELS,
+    since: null,
+    state: null,
   }, config);
 
   const {
-    GITHUB_TOKEN,
-    GITHUB_OWNER,
-    GITHUB_PROJECT,
-    ISSUE_LABELS,
+    token,
+    owner,
+    project,
+    labels,
+    since,
   } = config;
 
   debug('starting changelog analysis');
@@ -116,10 +124,10 @@ const changelog = async (config) => {
 
   octokit.authenticate({
     type: 'token',
-    token: GITHUB_TOKEN,
+    token,
   });
 
-  const issues = await getAllIssues(GITHUB_OWNER, GITHUB_PROJECT, ISSUE_LABELS.split(','));
+  const issues = await getAllIssues(owner, project, labels.split(','), since);
 
   return issues.map(getInfo);
 };
