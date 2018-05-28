@@ -5,26 +5,25 @@ const Env = require('../config/env');
 const octokit = require('@octokit/rest')();
 
 /**
- * @param {String} owner Github owner username.
- * @param {String} repo Repository name.
- * @param {String[]} labels Issue labels.
- * @param {String} since Only issues updated at or after this time are returned.
+ * @param {Object} config Config object.
+ * @param {String} config.owner Github owner username.
+ * @param {String} config.repo Repository name.
+ * @param {String} config.labels Issue labels separated by comma.
+ * @param {String} config.since Only issues updated at or after this time are returned.
  * This is a timestamp in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ.
- * @param {String} [state='all'] Indicates the state of the issues to return.
+ * @param {String} [config.state='all'] Indicates the state of the issues to return.
  * Can be either open, closed, or all.
  * @return {Promise<Object[]>}
  */
-const getAllIssues = async (owner, repo, labels = [], since, state = 'all') => {
-  debug(`retrieving issues for: "${owner}:${repo}", with labels: "${labels.join(', ')}"`);
+const getAllIssues = async (config) => {
+  if (!config.since) delete config.since;
+  if (config.labels) config.labels = config.labels.split(',');
+
+  debug(`retrieving issues for: "${config.owner}:${config.project}", with labels: "${config.labels.join(', ')}"`);
+
   const issues = [];
 
-  let response = await octokit.issues.getForRepo({
-    owner,
-    repo,
-    labels,
-    state,
-    since,
-  });
+  let response = await octokit.issues.getForRepo(config);
 
   issues.push(...response.data);
 
@@ -104,19 +103,11 @@ const changelog = async (config) => {
   config = Object.assign({
     token: Env.GITHUB_TOKEN,
     owner: Env.GITHUB_OWNER,
-    project: Env.GITHUB_PROJECT,
+    repo: Env.GITHUB_PROJECT,
     labels: Env.ISSUE_LABELS,
     since: undefined,
-    state: undefined,
+    state: 'all',
   }, config);
-
-  const {
-    token,
-    owner,
-    project,
-    labels,
-    since,
-  } = config;
 
   debug('starting changelog analysis');
 
@@ -124,10 +115,10 @@ const changelog = async (config) => {
 
   octokit.authenticate({
     type: 'token',
-    token,
+    token: config.token,
   });
 
-  const issues = await getAllIssues(owner, project, labels.split(','), since);
+  const issues = await getAllIssues(config);
 
   return issues.map(getInfo);
 };
