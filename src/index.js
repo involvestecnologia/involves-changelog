@@ -106,8 +106,8 @@ const changelog = async (config) => {
     owner: Env.GITHUB_OWNER,
     project: Env.GITHUB_PROJECT,
     labels: Env.ISSUE_LABELS,
-    since: null,
-    state: null,
+    since: undefined,
+    state: undefined,
   }, config);
 
   const {
