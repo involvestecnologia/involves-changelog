@@ -88,6 +88,7 @@ const getInfo = (issue) => {
     .pop();
 
   return {
+    id: issue.id,
     module,
     description,
     notes,
