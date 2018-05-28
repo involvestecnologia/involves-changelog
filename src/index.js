@@ -95,12 +95,21 @@ const getInfo = (issue) => {
  * @param {Object} config Configuration object.
  * @return {Promise<Object>}
  */
-const changelog = async ({
-  GITHUB_TOKEN = Env.GITHUB_TOKEN,
-  GITHUB_OWNER = Env.GITHUB_OWNER,
-  GITHUB_PROJECT = Env.GITHUB_PROJECT,
-  ISSUE_LABELS = Env.ISSUE_LABELS,
-}) => {
+const changelog = async (config) => {
+  config = Object.assign({
+    GITHUB_TOKEN: Env.GITHUB_TOKEN,
+    GITHUB_OWNER: Env.GITHUB_OWNER,
+    GITHUB_PROJECT: Env.GITHUB_PROJECT,
+    ISSUE_LABELS: Env.ISSUE_LABELS,
+  }, config);
+
+  const {
+    GITHUB_TOKEN,
+    GITHUB_OWNER,
+    GITHUB_PROJECT,
+    ISSUE_LABELS,
+  } = config;
+
   debug('starting changelog analysis');
 
   debug('initializing github api');
