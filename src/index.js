@@ -28,7 +28,7 @@ const getAllIssues = async (config) => {
   issues.push(...response.data);
 
   while (octokit.hasNextPage(response)) {
-    debug(`retrieving next page for: "${owner}:${repo}", with labels: "${labels.join(', ')}"`);
+    debug(`retrieving next page for: "${config.owner}:${config.repo}", with labels: "${config.labels.join(', ')}"`);
 
     response = await octokit.getNextPage(response);
     issues.push(...response.data);
