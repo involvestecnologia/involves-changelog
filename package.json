@@ -3,7 +3,6 @@
   "version": "0.1.1",
   "main": "src",
   "scripts": {
-    "start": "nodemon src/index.js",
     "eslint": "eslint . --ext .js",
     "create:env-file": "node bin/create-env-file"
   },
@@ -18,12 +17,6 @@
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.12.0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run eslint",
-      "pre-push": "npm run test:unit"
-    }
   },
   "engines": {
     "node": ">=7.6.0 < 9"
