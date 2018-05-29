@@ -19,7 +19,7 @@ const getAllIssues = async (config) => {
   if (!config.since) delete config.since;
   if (config.labels) config.labels = config.labels.split(',');
 
-  debug(`retrieving issues for: "${config.owner}:${config.project}", with labels: "${config.labels.join(', ')}"`);
+  debug(`retrieving issues for: "${config.owner}:${config.project}"`);
 
   const issues = [];
 
@@ -28,7 +28,7 @@ const getAllIssues = async (config) => {
   issues.push(...response.data);
 
   while (octokit.hasNextPage(response)) {
-    debug(`retrieving next page for: "${config.owner}:${config.repo}", with labels: "${config.labels.join(', ')}"`);
+    debug(`retrieving next page for: "${config.owner}:${config.repo}"`);
 
     response = await octokit.getNextPage(response);
     issues.push(...response.data);
@@ -88,7 +88,7 @@ const getInfo = (issue) => {
     .pop();
 
   return {
-    id: issue.id,
+    issue,
     module,
     description,
     notes,
@@ -125,3 +125,13 @@ const changelog = async (config) => {
 };
 
 module.exports = changelog;
+
+changelog()
+  .then(() => {
+    console.log('deu')
+    process.exit(0)
+  })
+  .catch((err) => {
+    console.error(err)
+    process.exit(1)
+  })
