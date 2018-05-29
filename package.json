@@ -1,6 +1,6 @@
 {
   "name": "involves-changelog",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "main": "src",
   "scripts": {
     "eslint": "eslint . --ext .js",
