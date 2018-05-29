@@ -125,13 +125,3 @@ const changelog = async (config) => {
 };
 
 module.exports = changelog;
-
-changelog()
-  .then(() => {
-    console.log('deu')
-    process.exit(0)
-  })
-  .catch((err) => {
-    console.error(err)
-    process.exit(1)
-  })
