@@ -56,7 +56,7 @@ const getTagValue = (content, tagName) => {
  * Extract issue information from meta tags.
  *
  * @param {Object} issue Github issue object.
- * @return {{module: string, description: string, notes: Object[], cause: string}}
+ * @return {Object}
  */
 const getInfo = (issue) => {
   debug(`extracting meta information for issue "${issue.id}"`);
@@ -68,14 +68,14 @@ const getInfo = (issue) => {
   const description = (getTagValue(issue.body, 'GC-DESCRICAO')
     .pop() || '');
 
-  const notes = getTagValue(issue.body, 'GC-NOTA')
-    .map(note => ({
-      melhorias: getTagValue(note, 'MELHORIA'),
-      inovacoes: getTagValue(note, 'INOVACAO'),
-      duvidas: getTagValue(note, 'DUVIDA'),
-      correcoes: getTagValue(note, 'CORRECAO'),
-      dataRelease: getTagValue(note, 'DATA-RELEASE').pop(),
-    }));
+  let note = getTagValue(issue.body, 'GC-NOTA')[0];
+  note = ({
+    melhorias: getTagValue(note, 'MELHORIA'),
+    inovacoes: getTagValue(note, 'INOVACAO'),
+    duvidas: getTagValue(note, 'DUVIDA'),
+    correcoes: getTagValue(note, 'CORRECAO'),
+    dataRelease: getTagValue(note, 'DATA-RELEASE').pop(),
+  });
 
   const cause = (getTagValue(issue.body, 'GC-CAUSA')
     .pop() || '')
@@ -91,7 +91,7 @@ const getInfo = (issue) => {
     issue,
     module,
     description,
-    notes,
+    note,
     cause,
   };
 };
