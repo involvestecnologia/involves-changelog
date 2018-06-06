@@ -17,7 +17,11 @@ const octokit = require('@octokit/rest')();
  */
 const getAllIssues = async (config) => {
   if (!config.since) delete config.since;
-  if (config.labels) config.labels = config.labels.split(',');
+  if (config.labels) {
+    config.labels = config.labels.split(',');
+  } else {
+    delete config.labels;
+  }
 
   debug(`retrieving issues for: "${config.owner}:${config.repo}"`);
 
