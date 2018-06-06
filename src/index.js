@@ -46,10 +46,10 @@ const getAllIssues = async (config) => {
  * @param {String} tagName Tag name to look inside content.
  * @return {String[]}
  */
-const getTagValue = (content, tagName) => {
+const getTagValue = (content = '', tagName = '') => {
   const tagRegex = new RegExp(`<${tagName}>([^]*?)</${tagName}>`, 'g');
 
-  return (content.match(tagRegex) || [])
+  return ((content || '').match(tagRegex) || [])
     .map(tag => tag
       .replace(`<${tagName}>`, '')
       .replace(`</${tagName}>`, '')
@@ -69,10 +69,9 @@ const getInfo = (issue) => {
     ? issue.title.replace('//', '').split('-')[0].trim()
     : 'UNDEFINED';
 
-  const description = (getTagValue(issue.body, 'GC-DESCRICAO')
-    .pop() || '');
+  const description = getTagValue(issue.body, 'GC-DESCRICAO').pop();
 
-  let note = getTagValue(issue.body, 'GC-NOTA')[0];
+  let note = getTagValue(issue.body, 'GC-NOTA').pop();
   if (note) {
     note = ({
       melhorias: getTagValue(note, 'MELHORIA'),
