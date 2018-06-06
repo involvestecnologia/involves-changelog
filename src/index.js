@@ -73,13 +73,15 @@ const getInfo = (issue) => {
     .pop() || '');
 
   let note = getTagValue(issue.body, 'GC-NOTA')[0];
-  note = ({
-    melhorias: getTagValue(note, 'MELHORIA'),
-    inovacoes: getTagValue(note, 'INOVACAO'),
-    duvidas: getTagValue(note, 'DUVIDA'),
-    correcoes: getTagValue(note, 'CORRECAO'),
-    dataRelease: getTagValue(note, 'DATA-RELEASE').pop(),
-  });
+  if (note) {
+    note = ({
+      melhorias: getTagValue(note, 'MELHORIA'),
+      inovacoes: getTagValue(note, 'INOVACAO'),
+      duvidas: getTagValue(note, 'DUVIDA'),
+      correcoes: getTagValue(note, 'CORRECAO'),
+      dataRelease: getTagValue(note, 'DATA-RELEASE').pop(),
+    });
+  }
 
   const cause = (getTagValue(issue.body, 'GC-CAUSA')
     .pop() || '')
