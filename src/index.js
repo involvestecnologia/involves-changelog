@@ -19,7 +19,7 @@ const getAllIssues = async (config) => {
   if (!config.since) delete config.since;
   if (config.labels) config.labels = config.labels.split(',');
 
-  debug(`retrieving issues for: "${config.owner}:${config.project}"`);
+  debug(`retrieving issues for: "${config.owner}:${config.repo}"`);
 
   const issues = [];
 
