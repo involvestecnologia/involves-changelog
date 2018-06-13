@@ -83,6 +83,8 @@ const getInfo = (issue) => {
       .trim())
     .pop();
 
+  issue.labels = issue.labels.map(label => label.name);
+
   return {
     issue,
     module,
