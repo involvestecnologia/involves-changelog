@@ -70,17 +70,8 @@ const getInfo = (issue) => {
     : 'UNDEFINED';
 
   const description = getTagValue(issue.body, 'GC-DESCRICAO').pop();
-
-  let note = getTagValue(issue.body, 'GC-NOTA').pop();
-  if (note) {
-    note = ({
-      melhorias: getTagValue(note, 'MELHORIA'),
-      inovacoes: getTagValue(note, 'INOVACAO'),
-      duvidas: getTagValue(note, 'DUVIDA'),
-      correcoes: getTagValue(note, 'CORRECAO'),
-      dataRelease: getTagValue(note, 'DATA-RELEASE').pop(),
-    });
-  }
+  const note = getTagValue(issue.body, 'GC-NOTA').pop();
+  const releaseDate = getTagValue(note, 'GC-DATA-RELEASE').pop();
 
   const cause = (getTagValue(issue.body, 'GC-CAUSA')
     .pop() || '')
@@ -98,6 +89,7 @@ const getInfo = (issue) => {
     description,
     note,
     cause,
+    releaseDate,
   };
 };
 
